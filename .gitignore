@@ -1,0 +1,20 @@
+node_modules/
+**/node_modules/
+*.log
+.DS_Store
+Thumbs.db
+
+# runtime state (never commit)
+approval.json
+pending.json
+delete-burst.json
+ghost-nudge.json
+
+# local overrides
+runtime/edit-gate/config.json
+
+# build junk
+ui/*.vsix
+!vsix/*.vsix
+ui/node_modules/
+*.tgz

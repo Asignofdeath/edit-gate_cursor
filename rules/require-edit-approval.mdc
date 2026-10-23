@@ -1,0 +1,36 @@
+---
+description: 编辑审批；批量删走 batch 工具；单删可用但有双防卫熔断
+alwaysApply: true
+---
+
+# Edit Gate 安全通道
+
+预设：用户可能处于**自动执行命令**模式。
+
+## 编辑（改代码）
+
+1. 本轮第一次 Write / StrReplace / EditNotebook / 非删除 Shell 之前，调用 MCP **edit-gate → request_edit_approval**（`reason` 必填，`paths` 建议填）。
+2. 等返回 `approved: true` 后再改。批准授予本轮编辑权（含受熔断约束的单删）。
+3. 同轮已批准后不要重复申请；stop 后失效。
+
+## 删除
+
+### Shell 批量/递归/通配删
+
+**禁止**（`Remove-Item -Recurse`、`rm -rf`、`rd /s`、管道批量删等）。改用 **request_batch_delete**（先列好全部绝对路径，面板确认后由 MCP 删除）。
+
+### 单删（允许，双防卫）
+
+可用 Cursor **Delete** 工具或 Shell **单文件**删除，但：
+
+1. 须已有本轮 `request_edit_approval`（门禁开启时）。
+2. **10 秒内单删超过 6 次** → 本轮熔断。
+3. **本轮单删累计超过 10 次** → 本轮熔断。
+4. 熔断后本轮内禁止再 Shell 单删与 Delete；批量请走 **request_batch_delete**。
+
+Delete 与 Shell 单删**共用**同一计数器。`request_batch_delete` 不计入。
+
+## 其它
+
+- 空消息 / 无明确指令 → 不申请、不改、不删。
+- 大量清理优先 `request_batch_delete`，或让用户自行在资源管理器删除。

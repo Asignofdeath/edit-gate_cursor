@@ -1,0 +1,40 @@
+{
+  "name": "edit-gate-ui",
+  "displayName": "Edit Gate UI",
+  "description": "Edit approval panel + manual ghost containment. Master switch: editGate.enabled.",
+  "version": "0.6.0",
+  "publisher": "local",
+  "engines": { "vscode": "^1.85.0" },
+  "categories": ["Other"],
+  "activationEvents": ["onStartupFinished"],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      { "command": "editGate.statusClick", "title": "Edit Gate: Status Click" },
+      { "command": "editGate.showPanel", "title": "Edit Gate: Show Panel" },
+      { "command": "editGate.approve", "title": "Edit Gate: Approve" },
+      { "command": "editGate.deny", "title": "Edit Gate: Deny" },
+      { "command": "editGate.containGhost", "title": "Edit Gate: Contain Ghost Now" }
+    ],
+    "configuration": {
+      "title": "Edit Gate",
+      "properties": {
+        "editGate.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "总开关：关闭后不再拦截写入/Shell，也不再弹出审批或执行遏制幽灵。同步到 ~/.cursor/edit-gate/config.json 供 hooks 读取。"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "esbuild src/extension.ts --bundle --outfile=out/extension.js --external:vscode --format=cjs --platform=node --sourcemap",
+    "package": "npm run compile && npx --yes @vscode/vsce package --allow-missing-repository --skip-license"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.10",
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.25.1",
+    "typescript": "^5.8.2"
+  }
+}

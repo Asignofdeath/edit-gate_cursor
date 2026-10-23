@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "singleDeleteWindowMs": 10000,
+  "singleDeleteBurstLimit": 6,
+  "singleDeleteMaxPerTurn": 10,
+  "batchDeleteMaxPaths": 100,
+  "batchDeleteAllowDirectories": false,
+  "requireWorkspaceBound": true,
+  "allowedRoots": []
+}
